@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../jquery/jquery.form.js"></script>
+</head>
+
+<body>
+<form action="###" id="login-form" method="post">
+    用户名:<input type="text" name="userName" id="user_name"/><br>
+    密码:<input type="text" name="password" id="pswd"/><br>
+    <input type="button" id="loginBtn" value="登录" />
+</form>
+
+<script>
+
+    $('#loginBtn').on('click',function(){
+
+        var userName = $("#user_name").val();
+        var password = $('#pswd').val();
+
+        $('#login-form').ajaxSubmit({
+            type: 'POST', // 提交方式 get/post
+            url: '../user/login.do', // 需要提交的 url
+//            data: {
+//                'userName': userName,
+//                'password': password
+//            },
+            success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+                // 此处可对 data 作相关处理
+                alert('提交成功！');
+            }
+        });
+        return false; // 阻止表单自动提交事件
+    })
+
+
+</script>
+</body>
+</html>

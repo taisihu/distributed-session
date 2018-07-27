@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/task
+           http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:server.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <mvc:annotation-driven />
+    <context:annotation-config />
+    <context:component-scan base-package="net.hk.mvcc.controller,net.hts.distributesession.controller"/>
+
+    <mvc:interceptors>
+        <mvc:interceptor><!--  使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求   -->
+            <mvc:mapping path="/**" /><!-- 进行拦截：表示拦截所有controller -->
+            <mvc:exclude-mapping path="*.js"/><!-- 不进行拦截 -->
+            <mvc:exclude-mapping path="/index.html"/><!-- 不进行拦截 -->
+            <mvc:exclude-mapping path="/login.jsp"/><!-- 不进行拦截 -->
+            <mvc:exclude-mapping path="/user/toLogin"/>
+            <mvc:exclude-mapping path="/user/login.do"/>
+            <bean class="net.hts.distributesession.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="1" />
+    </bean>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/html" />
+        <property name="suffix" value=".html" />
+    </bean>
+
+    <bean name="jsonView"
+              class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+        <property name="contentType" value="text/plain"></property>
+    </bean>
+
+
+    <!--
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/"/>
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="default.contentType">text/html; charset=utf-8</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+     <bean id="viewResolver"
+              class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="cache" value="true" />
+        <property name="prefix" value="" />
+        <property name="suffix" value=".vm" />
+        <property name="order" value="2"></property>
+        <property name="viewClass" value="com.shunwang.game.scms2.web.view.VelocityContextView"></property>
+    </bean>
+
+     -->
+
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="multipartResolver"
+              class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes 5M -->
+        <property name="maxUploadSize" value="5242880" />
+    </bean>	
+
+</beans>
